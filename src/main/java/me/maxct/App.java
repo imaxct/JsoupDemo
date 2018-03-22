@@ -3,12 +3,14 @@ package me.maxct;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 import org.jsoup.Jsoup;
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 
 public class App {
+    static Map<String, String>cookies = null;
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
         Response response = Jsoup.connect("http://bkjws.sdu.edu.cn/b/ajaxLogin").method(Method.POST)
                 .data("j_username", "2015xxxxx", "j_password", md5("123456"))
@@ -18,7 +20,9 @@ public class App {
         if (response.statusCode() == 200) {
             String res = response.body();
             if (res.contains("success")) {
+                cookies = response.cookies();//这个cookies就可以拿去请求别的了.
                 System.out.println("Login Success");
+                System.out.println(cookies);
             } else {
                 System.out.println(res);
             }
